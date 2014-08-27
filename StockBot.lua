@@ -58,6 +58,8 @@ if not HAS_RUN then
 	--local STOCK_URL = "http://tptapi.com/stock_history.php?history=" .. STOCK_FOCUS
 	MARKET_URL = "http://tptapi.com/stock.php"
 
+	--irc_send("test")
+
 	CURRENT_USER = "BMNNation"
 
 	CURRENT_PASS = "_PASSWORD"
@@ -65,7 +67,6 @@ if not HAS_RUN then
 	QUERY_TAB = irc_send("/query stockbot614")
 	setTab(QUERY_TAB)
 	irc_send("!!login " .. CURRENT_USER .. " " .. CURRENT_PASS)
-	--irc_send("test")
 
 	--irc_send("/join #TPTAPIStocks")
 	irc_send("/join #BMNStockBot")
@@ -254,10 +255,17 @@ local help = {}
 			threshold = t[1]
 			irc_rawsend("#BMNStockBot", "Set buy/sell threshold to " .. t[1] .. "%!")
 		else
-			irc_rawsend("#BMNStockBot", "Please enter threshold value!")
+			irc_rawsend("#BMNStockBot", "Current buy/sell threshold: " .. threshold)
 		end
 	end
 	help.threshold = "*threshold (percent). Sets the buy/sell threshold."
+
+	commands.login = function(t)
+		QUERY_TAB = irc_send("/query stockbot614")
+		setTab(QUERY_TAB)
+		irc_send("!!login " .. CURRENT_USER .. " " .. CURRENT_PASS)
+	end
+
 
 TableMode = "fancy"
 commands.output{TableMode}
@@ -282,9 +290,6 @@ while not UPDATE_SCRIPT do
 		if msg then
 			print(msg)
 			if type(msg) == "string" then
-				if msg:find("ping") then
-					irc_rawsend("#BMNStockBot", "Recieved possible ping: " .. msg)
-				end
 				msg = msg:sub(2, -1)
 				if ((msg:lower()):find("feynman") or msg:find("wolfy1339") or msg:find("KydonShadow")) and msg:find("PRIVMSG") then
 					local msg = msg:sub(msg:find(":") + 1, -1)
